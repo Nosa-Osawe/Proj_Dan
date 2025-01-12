@@ -86,6 +86,7 @@ colnames(R8_seed)
 
 R8_seed_summary <- R8_seed %>% 
   select(-biomass) %>%          # I Do not need biomass anymore
+  rename(Al="Al.with.ppm.uom") %>% 
   group_by(id) %>% 
   summarise(across(where(is.numeric), mean, na.rm = TRUE)) %>% 
   as.data.frame()
@@ -93,12 +94,9 @@ R8_seed_summary <- R8_seed %>%
 view(R8_seed_summary)
 
 
-R8_seed_summary_T <- as.data.frame(t(R8_seed_summary)) 
-
-rownames(R8_seed_summary_T)
 
 
-R8_seed_summary_T <- R8_seed_summary %>%
+R8_seed_relative <- R8_seed_summary %>%
   pivot_longer(
     cols = -id, # All columns except `id`
     names_to = "Nutrients", 
@@ -108,12 +106,54 @@ R8_seed_summary_T <- R8_seed_summary %>%
     names_from = id,
     values_from = Value
   ) %>% 
-  as.data.frame() %>% 
   rename(vpd="vpd ") %>% 
-  mutate(R_hea= ((heat-control)/control)*100) %>% 
-  mutate(R_vpd= ((vpd -control)/control)*100) %>% 
+  mutate(R_heat= (((heat-control)/control))*100) %>% 
+  mutate(R_vpd= (((vpd -control)/control))*100) %>% 
+  select(-control,-heat, -vpd) %>% 
+  pivot_longer(
+    cols = -Nutrients,
+    names_to = "id",
+    values_to = "Mean_Relative_change"
+  ) %>% 
   as.data.frame()
 
 
 
+view(R8_seed_relative)
+
+#--- based of a quick skim of your codes, I suggest you want some elements on one plot, 
+#--- and others in another
+
+R8_seed_relative %>% 
+  filter(Nutrients %in% c("N", "S", "P", "K", "Mg", "Ca", "Na")) %>% 
+ggplot(aes(x = Nutrients, y = Mean_Relative_change, fill = id)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
+  labs(
+    title = "Relative Change of Nutrients Compared to Control",
+    x = "Nutrient",
+    y = "Relative Change (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  ) +
+  scale_fill_brewer(palette = "Set2")
+
+
+R8_seed_relative %>% 
+  filter(!Nutrients %in% c("N", "S", "P", "K", "Mg", "Ca", "Na")) %>% 
+  ggplot(aes(x = Nutrients, y = Mean_Relative_change, fill = id)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
+  labs(
+    title = "Relative Change of Nutrients Compared to Control",
+    x = "Nutrient",
+    y = "Relative Change (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  ) +
+  scale_fill_brewer(palette = "Set2")
 
