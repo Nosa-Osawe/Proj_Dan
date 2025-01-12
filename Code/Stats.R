@@ -79,5 +79,41 @@ print(result.Cu <- lm_function("Cu", R8_seed))
 print(result.Al.with.ppm.uom <- lm_function("Al.with.ppm.uom",
                                             R8_seed))
 
+########################PLOTS###################################################
+
+# ---- make the plots here
+colnames(R8_seed)
+
+R8_seed_summary <- R8_seed %>% 
+  select(-biomass) %>%          # I Do not need biomass anymore
+  group_by(id) %>% 
+  summarise(across(where(is.numeric), mean, na.rm = TRUE)) %>% 
+  as.data.frame()
+
+view(R8_seed_summary)
+
+
+R8_seed_summary_T <- as.data.frame(t(R8_seed_summary)) 
+
+rownames(R8_seed_summary_T)
+
+
+R8_seed_summary_T <- R8_seed_summary %>%
+  pivot_longer(
+    cols = -id, # All columns except `id`
+    names_to = "Nutrients", 
+    values_to = "Value"   
+  ) %>% 
+  pivot_wider(
+    names_from = id,
+    values_from = Value
+  ) %>% 
+  as.data.frame() %>% 
+  rename(vpd="vpd ") %>% 
+  mutate(R_hea= ((heat-control)/control)*100) %>% 
+  mutate(R_vpd= ((vpd -control)/control)*100) %>% 
+  as.data.frame()
+
+
 
 
