@@ -106,9 +106,9 @@ R8_seed_relative <- R8_seed_summary %>%
     names_from = id,
     values_from = Value
   ) %>% 
-  rename(vpd="vpd ") %>% 
-  mutate(R_heat= (((heat-control)/control))*100) %>% 
-  mutate(R_vpd= (((vpd -control)/control))*100) %>% 
+  rename(vpd="vpd ") %>% # this spacing in the name gave issues, now resolved
+  mutate(Heat= (((heat-control)/control))*100) %>% 
+  mutate(VPD= (((vpd -control)/control))*100) %>% 
   select(-control,-heat, -vpd) %>% 
   pivot_longer(
     cols = -Nutrients,
@@ -131,7 +131,8 @@ ggplot(aes(x = Nutrients, y = Mean_Relative_change, fill = id)) +
   labs(
     title = "Relative Change of Nutrients Compared to Control",
     x = "Nutrient",
-    y = "Relative Change (%)"
+    y = "Relative Change (%)",
+    fill = "I.D"
   ) +
   theme_minimal() +
   theme(
@@ -148,12 +149,14 @@ R8_seed_relative %>%
   labs(
     title = "Relative Change of Nutrients Compared to Control",
     x = "Nutrient",
-    y = "Relative Change (%)"
+    y = "Relative Change (%)",
+    fill = "I.d"
   ) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
-    plot.title = element_text(hjust = 0.5)
+    plot.title = element_text(hjust = 0.5),
   ) +
   scale_fill_brewer(palette = "Set2")
+
 
