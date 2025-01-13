@@ -50,12 +50,14 @@ HSD.test(N_anova,
 
 
 
-lm_function <- function(dependent_var, data) {
+lm_function <- function(dependent_var, data,  
+                        alpha = 0.1) { # we can adjust the alpha level here
 
   formula <- as.formula(paste(dependent_var, "~ id"))
   lm_summary <- summary(lm_model <- lm(formula, data = data))
   aov_summary <- summary(aov_model <- aov(formula, data = data))
-  hsd_groups <- agricolae::HSD.test(aov_model, trt = c("id"), group = TRUE)$groups
+  hsd_groups <- agricolae::HSD.test(aov_model, trt = c("id"), alpha = alpha, 
+                                    group = TRUE)$groups
   
   return(list(
     lm_summary = lm_summary,
@@ -158,5 +160,265 @@ R8_seed_relative %>%
     plot.title = element_text(hjust = 0.5),
   ) +
   scale_fill_brewer(palette = "Set2")
+
+
+############### BAR CHARTS #################################################################
+
+R8_seed_L <- R8_seed %>% 
+  select(-Sample.Id) %>%
+  rename(Al="Al.with.ppm.uom") %>% 
+  pivot_longer(
+    cols = -id,
+    names_to = "Nutrients",
+    values_to = "Values"
+  ) %>% as.data.frame()
+  
+(
+  N.bar<- R8_seed_L %>% 
+    filter(Nutrients=="N") %>% 
+    ggplot(aes(x=id, y= Values))+
+  stat_summary(geom = "bar", fun = mean, 
+               position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+  stat_summary(geom = "errorbar", fun.data = mean_se, 
+               position = position_dodge(width = 0.5),
+               width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Nitrogen",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  S.bar<- R8_seed_L %>% 
+    filter(Nutrients=="S") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Sulphur",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+ P.bar<- R8_seed_L %>% 
+    filter(Nutrients=="P") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Phosphorus",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  P.bar<- R8_seed_L %>% 
+    filter(Nutrients=="P") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Phosphorus",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  K.bar<- R8_seed_L %>% 
+    filter(Nutrients=="K") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Potassium",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+(
+  Mg.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Mg") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Magnesium",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+(
+  Ca.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Ca") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Calcium",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+(
+  Na.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Na") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Sodium",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  B.bar<- R8_seed_L %>% 
+    filter(Nutrients=="B") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Boron",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+(
+  Zn.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Zn") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Zinc",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  Mn.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Mn") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Manganese",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  Fe.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Fe") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Iron",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
+(
+  Cu.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Cu") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Copper",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+(
+  Al.bar<- R8_seed_L %>% 
+    filter(Nutrients=="Al") %>% 
+    ggplot(aes(x=id, y= Values))+
+    stat_summary(geom = "bar", fun = mean, 
+                 position = position_dodge(width = 0.5), fill = "darkgrey", width = 0.5) +
+    stat_summary(geom = "errorbar", fun.data = mean_se, 
+                 position = position_dodge(width = 0.5),
+                 width = 0.2, colour = "black", size = 0.9)+
+    labs(
+      title = "Aluminum",
+      x = "Treatment",
+      y = "Nutrient Yield (mg/Kg)",
+    ) +
+    theme_minimal()
+)
+
+
 
 
