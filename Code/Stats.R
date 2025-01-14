@@ -42,16 +42,11 @@ R8_seed<- plant_Nutr.yield %>%
 
 head(R8_seed)
 
-# sample analysis
-summary(N_anova_lm <- lm(N~id, data=R8_seed))
-summary(N_anova <- aov(N~id, data=R8_seed))
-HSD.test(N_anova, 
-         trt = c("id"), group = TRUE)$groups
-
+####### Linear model#####################################################
 
 
 lm_function <- function(dependent_var, data,  
-                        alpha = 0.1) { # we can adjust the alpha level here
+                        alpha = 0.1) { # -we can adjust the alpha level here
 
   formula <- as.formula(paste(dependent_var, "~ id"))
   lm_summary <- summary(lm_model <- lm(formula, data = data))
