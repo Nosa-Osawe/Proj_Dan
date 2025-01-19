@@ -101,8 +101,9 @@ summary(A_3rd_m4)
 
 anova(A_3rd_m3, A_3rd_m4) # Go with more complex model: A_3rd_m3
 
-
-emmeans(A_3rd_m3, pairwise~treatment)
+# Finally
+emmeans(A_3rd_m3, pairwise~treatment)$emmeans
+anova(A_3rd_m3)
 
 ####################################################################################
 
@@ -154,7 +155,9 @@ gsw_3rd_m4 <- lme(
 summary(gsw_3rd_m4)
 anova(gsw_3rd_m3, gsw_3rd_m4) # go with the simpler model: gsw_3rd_m4
 
-emmeans(gsw_3rd_m4, pairwise~treatment)
+# Finally
+emmeans(gsw_3rd_m4, pairwise~treatment)$emmeans
+anova(gsw_3rd_m4)
 
 ###############################################################################
 
@@ -201,8 +204,9 @@ Qin_3rd_m4 <- lme(
 summary(Qin_3rd_m4)
 anova(Qin_3rd_m2, Qin_3rd_m4) # go with the more complex model: Qin_3rd_m2
 
-
-emmeans(Qin_3rd_m2, pairwise~treatment)
+# Finally
+emmeans(Qin_3rd_m2, pairwise~treatment)$emmeans
+anova(Qin_3rd_m2)
 
 ###############################################################################
 
