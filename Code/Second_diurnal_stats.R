@@ -225,7 +225,8 @@ anova(Tleaf_2nd_m4)
 anova(Tleaf_2nd_m3,Tleaf_2nd_m4)
   # Tleaf_2nd_m4 model without interaction term is better and simpler
 
-emmeans(Tleaf_2nd_m4, pairwise ~ treatment)
+emmeans(Tleaf_2nd_m4, pairwise ~ treatment)$emmeans
+anova(Tleaf_2nd_m4)
 
 #####################################################################################
 
@@ -265,7 +266,9 @@ anova(VPDleaf_2nd_m2, VPDleaf_2nd_m3)
 
 # VPDleaf_2nd_m3 is better
 
-emmeans(VPDleaf_2nd_m3, pairwise ~ treatment)
+# Finally
+emmeans(VPDleaf_2nd_m3, pairwise ~ treatment)$emmeans
+anova(VPDleaf_2nd_m3)
 
 #################################################################################
 
@@ -302,6 +305,7 @@ anova(PhiPS2_2nd_m3)
 anova(PhiPS2_2nd_m1, PhiPS2_2nd_m3) 
 # Go with the simpler model: PhiPS2_2nd_m3
 
-emmeans(PhiPS2_2nd_m3, pairwise~treatment)
+emmeans(PhiPS2_2nd_m3, pairwise~treatment)$emmeans
+anova(PhiPS2_2nd_m3)
 
 ##################################################################

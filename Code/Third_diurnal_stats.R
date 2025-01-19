@@ -252,7 +252,8 @@ Tleaf_3rd_m4 <- lme(
 summary(Tleaf_3rd_m4)
 anova(Tleaf_3rd_m3, Tleaf_3rd_m4) # go with the more complex model: Tleaf_3rd_m3
 
-emmeans(Tleaf_3rd_m3, pairwise~treatment)
+emmeans(Tleaf_3rd_m3, pairwise~treatment)$emmeans
+anova(Tleaf_3rd_m3)
 
 ################################################################################
 
@@ -297,7 +298,9 @@ VPDleaf_3rd_m4 <- lme(
 summary(VPDleaf_3rd_m4)
 anova(VPDleaf_3rd_m3, VPDleaf_3rd_m4) # Go with simpler model: VPDleaf_3rd_m4
 
-emmeans(VPDleaf_3rd_m4, pairwise~treatment)
+# Finally
+emmeans(VPDleaf_3rd_m4, pairwise~treatment)$emmeans
+anova(VPDleaf_3rd_m4)
 
 ###############################################################################
 
