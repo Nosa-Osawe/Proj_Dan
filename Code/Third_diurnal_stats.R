@@ -349,4 +349,8 @@ PhiPS2_3rd_m4 <- lme(
 summary(PhiPS2_3rd_m4)
 anova(PhiPS2_3rd_m3, PhiPS2_3rd_m4) # go with the more complex model: PhiPS2_3rd_m3
 
-emmeans(PhiPS2_3rd_m3, pairwise~treatment)
+# Finally
+emmeans(PhiPS2_3rd_m3, pairwise~treatment)$emmeans
+anova(PhiPS2_3rd_m3)
+
+
