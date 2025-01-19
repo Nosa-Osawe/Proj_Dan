@@ -42,7 +42,7 @@ data3rd <- data3rd %>%
 
 # Preview the processed data
 head(data3rd, 10)
-view(data3rd)
+ 
 # Ensure block, treatment, and tod are appropriately formatted
 data3rd <- data3rd %>%
   mutate(
@@ -76,7 +76,7 @@ A_3rd_m2 <- lme(
 summary(A_3rd_m2)
 anova(A_3rd_m2)
 
-anova(A_3rd_m1, A_3rd_m2)
+anova(A_3rd_m1, A_3rd_m2) # Go with simpler model
 
 A_3rd_m3 <- lme(
   A ~ treatment + tod,                     
@@ -87,7 +87,7 @@ A_3rd_m3 <- lme(
 )   
 
 summary(A_3rd_m3)
-anova(A_3rd_m3)
+anova(A_3rd_m2, A_3rd_m3) # Go with simpler model: A_3rd_m3
 
 A_3rd_m4 <- lme(
   A ~ treatment + tod,                     
@@ -99,7 +99,7 @@ A_3rd_m4 <- lme(
 
 summary(A_3rd_m4)
 
-anova(A_3rd_m3, A_3rd_m4) # A_3rd_m4 is worst!
+anova(A_3rd_m3, A_3rd_m4) # Go with more complex model: A_3rd_m3
 
 
 emmeans(A_3rd_m3, pairwise~treatment)

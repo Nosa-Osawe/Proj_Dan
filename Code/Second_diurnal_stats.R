@@ -52,7 +52,7 @@ data2nd <- data2nd %>%
     tod = as.numeric(as.character(tod))       
   )
 
-
+##############################################################################3
 gsw_2nd_m1 <- lme(
   gsw ~ treatment * tod,                      
   random = ~ 1 | block/treatment,           
@@ -262,7 +262,42 @@ anova(PhiPS2_2nd_m1, PhiPS2_2nd_m3)
 
 emmeans(PhiPS2_2nd_m3, pairwise~treatment)
 
+##################################################################
 
+A_2nd_m1 <- lme(
+  A ~ treatment * tod,                      
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),  
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data2nd
+)
 
+summary(A_2nd_m1)
+anova(A_2nd_m1)
+            # Interaction is n.s.
+
+A_2nd_m2 <- lme(
+  A ~ treatment + tod,                      
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),  
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data2nd
+)
+summary(A_2nd_m2) # correlation structure is strong here
+
+anova(A_2nd_m1, A_2nd_m2) # go with simpler model: A_2nd_m2
+
+A_2nd_m3 <- lme(
+  A ~ treatment + tod,                      
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),  
+ # weights = varIdent(form = ~ 1 | tod),     
+  data = data2nd
+)
+
+summary(A_2nd_m3)
+anova(A_2nd_m2, A_2nd_m3) # go with more complex model: A_2nd_m2
+
+emmeans(A_2nd_m2, pairwise~treatment)
 
 
