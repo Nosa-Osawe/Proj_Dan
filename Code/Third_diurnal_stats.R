@@ -224,7 +224,122 @@ Tleaf_3rd_m2 <- lme(
   correlation = corAR1(form = ~ tod | block/treatment),   
   weights = varIdent(form = ~ 1 | tod),     
   data = data3rd
-)   
-summary(Tleaf_3rd_m2)
+)   # Failed to converge
+
+Tleaf_3rd_m3 <- lme(
+  Tleaf ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+ # correlation = corAR1(form = ~ tod | block/treatment),   
+   weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+)  
+
+summary(Tleaf_3rd_m3)
+anova(Tleaf_3rd_m1, Tleaf_3rd_m3) # go with simpler model: Tleaf_3rd_m3
+
+Tleaf_3rd_m4 <- lme(
+  Tleaf ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+  # correlation = corAR1(form = ~ tod | block/treatment),   
+  # weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+)  
+
+summary(Tleaf_3rd_m4)
+anova(Tleaf_3rd_m3, Tleaf_3rd_m4) # go with the more complex model: Tleaf_3rd_m3
+
+emmeans(Tleaf_3rd_m3, pairwise~treatment)
+
+################################################################################
+
+VPDleaf_3rd_m1 <- lme(
+  VPDleaf ~ treatment * tod,                     
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),   
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+)   # Failed to converge properly
+
+VPDleaf_3rd_m2 <- lme(
+  VPDleaf ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),   
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+)   # Good!
+
+summary(VPDleaf_3rd_m2)
+
+VPDleaf_3rd_m3 <- lme(
+  VPDleaf ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+  #correlation = corAR1(form = ~ tod | block/treatment),   
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+)  
+summary(VPDleaf_3rd_m3)
+
+anova(VPDleaf_3rd_m2, VPDleaf_3rd_m3) # Go with simpler model: VPDleaf_3rd_m3
 
 
+VPDleaf_3rd_m4 <- lme(
+  VPDleaf ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+  #correlation = corAR1(form = ~ tod | block/treatment),   
+ # weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+)  
+
+summary(VPDleaf_3rd_m4)
+anova(VPDleaf_3rd_m3, VPDleaf_3rd_m4) # Go with simpler model: VPDleaf_3rd_m4
+
+emmeans(VPDleaf_3rd_m4, pairwise~treatment)
+
+###############################################################################
+
+
+PhiPS2_3rd_m1 <- lme(
+  PhiPS2 ~ treatment * tod,                     
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),   
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+) 
+
+summary(PhiPS2_3rd_m1)
+anova(PhiPS2_3rd_m1) # Interaction is n.s.
+
+PhiPS2_3rd_m2 <- lme(
+  PhiPS2 ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),   
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+) 
+
+summary(PhiPS2_3rd_m2)
+anova(PhiPS2_3rd_m1, PhiPS2_3rd_m2) # Go with simpler model: PhiPS2_3rd_m2
+
+PhiPS2_3rd_m3 <- lme(
+  PhiPS2 ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+#  correlation = corAR1(form = ~ tod | block/treatment),   
+  weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+) 
+
+summary(PhiPS2_3rd_m3)
+anova(PhiPS2_3rd_m2, PhiPS2_3rd_m3) # go with simpler model: PhiPS2_3rd_m3
+
+PhiPS2_3rd_m4 <- lme(
+  PhiPS2 ~ treatment + tod,                     
+  random = ~ 1 | block/treatment,           
+  #  correlation = corAR1(form = ~ tod | block/treatment),   
+  # weights = varIdent(form = ~ 1 | tod),     
+  data = data3rd
+) 
+
+summary(PhiPS2_3rd_m4)
+anova(PhiPS2_3rd_m3, PhiPS2_3rd_m4) # go with the more complex model: PhiPS2_3rd_m3
+
+emmeans(PhiPS2_3rd_m3, pairwise~treatment)
