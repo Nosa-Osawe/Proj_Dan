@@ -3,11 +3,11 @@
 library(emmeans)
 library(nlme)
 library(PhotoGEA)
-
+library(tidyverse)
 
 data2nd <- PhotoGEA::read_gasex_file("C:\\Users\\DELL\\Documents\\Git in R\\Proj_Dan\\Data\\diurnal second set.xlsx")
 data2nd <- data.frame(data2nd$main_data)
-library(tidyverse)
+
 # Step 2: Preprocess the Data
 # Rename columns, create block identifiers, and calculate mean values for each group
 data2nd <- data2nd %>%
@@ -47,25 +47,24 @@ view(data2nd)
 # Ensure block, treatment, and tod are appropriately formatted
 data2nd <- data2nd %>%
   mutate(
-    block = as.factor(block),                # Convert block to a factor
-    treatment = as.factor(treatment),        # Convert treatment to a factor
-    tod = as.numeric(as.character(tod))      # Convert time of day to numeric
+    block = as.factor(block),                 
+    treatment = as.factor(treatment),         
+    tod = as.numeric(as.character(tod))       
   )
 
-# Step 4: Initial Model Fitting
-# Fit a linear mixed-effects model with random intercepts for block/treatment
-# and a correlation structure for temporal dependency
 
 gsw_2nd_m1 <- lme(
-  gsw ~ treatment * tod,                     # Fixed effects: treatment, time of day, and their interaction
-  random = ~ 1 | block/treatment,          # Random intercepts for block and treatment within block
-  correlation = corAR1(form = ~ tod | block/treatment),  # Temporal correlation structure
-  weights = varIdent(form = ~ 1 | tod),    # Allow heteroscedasticity across time of day
+  gsw ~ treatment * tod,                      
+  random = ~ 1 | block/treatment,           
+  correlation = corAR1(form = ~ tod | block/treatment),  
+  weights = varIdent(form = ~ 1 | tod),     
   data = data2nd
 )
 
 # Summarize the model to inspect fixed and random effects
 summary(gsw_2nd_m1)
+anova(gsw_2nd_m1) # Interaction is significant
+                  # Correlation structure is high (-0.59)
 
 gsw_2nd_m2 <- lme(
   gsw ~ treatment * tod,                      
@@ -77,7 +76,7 @@ gsw_2nd_m2 <- lme(
 
 # Summarize the model to inspect fixed and random effects
 summary(gsw_2nd_m2)
-anova(gsw_2nd_m2)
+
 
 anova(gsw_2nd_m1,gsw_2nd_m2) # The simpler model reduced the AIC (which is good),
                               # yet there is no significant difference between the 
@@ -100,8 +99,9 @@ Qin_2nd_m1 <- lme(
 )
 
 summary(Qin_2nd_m1)
+anova(Qin_2nd_m1) # interaction term is significant
+
     # Correlation looks weak (0.16), but not zero
-    # compared to a simper model without Temporal correlation structure
 
 Qin_2nd_m2 <- lme(
   Qin ~ treatment * tod,                     
@@ -112,15 +112,20 @@ Qin_2nd_m2 <- lme(
 )
 
 summary(Qin_2nd_m2)
-anova(Qin_2nd_m2)
 
-anova(Qin_2nd_m1, Qin_2nd_m2)  # AIC is reduced but its too small
-      # I'd fall back to the more complex model
+anova(Qin_2nd_m1, Qin_2nd_m2)  # Go with simpler model: Qin_2nd_m2
+      
+Qin_2nd_m3 <- lme(
+  Qin ~ treatment * tod,                     
+  random = ~ 1 | block/treatment,           
+  #correlation = corAR1(form = ~ tod | block/treatment),   
+ # weights = varIdent(form = ~ 1 | tod),     
+  data = data2nd
+)
+summary(Qin_2nd_m3)
+anova(Qin_2nd_m2, Qin_2nd_m3) # Go with more complex model: Qin_2nd_m2
 
-# Trying to make the model simpler by taking out heteroscedasticity across time made the model run into errors.
-# can't explain why
-
-emmeans(Qin_2nd_m1, pairwise ~ treatment)
+emmeans(Qin_2nd_m2, pairwise ~ treatment)
 
 ######################################################################################
 
@@ -135,7 +140,7 @@ Tleaf_2nd_m1 <- lme(
 
 summary(Tleaf_2nd_m1)
 anova(Tleaf_2nd_m1)
-# Correation structure= 0.2 # quite good, but lets test with a against a simpler model
+            # Interaction term is sig.
 
 Tleaf_2nd_m2 <- lme(
   Tleaf ~ treatment * tod,                     
@@ -146,7 +151,6 @@ Tleaf_2nd_m2 <- lme(
 )
 
 summary(Tleaf_2nd_m2)
-anova(Tleaf_2nd_m2)
 anova(Tleaf_2nd_m1, Tleaf_2nd_m2) # simpler model is better
 
 
@@ -159,9 +163,9 @@ Tleaf_2nd_m3 <- lme(
 )
 
 summary(Tleaf_2nd_m3)
-anova(Tleaf_2nd_m3) # Interaction term is not significant
+anova(Tleaf_2nd_m3) # interaction term is n.s
 
-anova(Tleaf_2nd_m1, Tleaf_2nd_m2,Tleaf_2nd_m3)
+anova(Tleaf_2nd_m2,Tleaf_2nd_m3)
 
 # Tleaf_2nd_m3 is the best
 
@@ -208,11 +212,12 @@ anova(VPDleaf_2nd_m2)
 VPDleaf_2nd_m3 <- lme(
   VPDleaf ~ treatment + tod,                     
   random = ~ 1 | block/treatment,           
- # correlation = corAR1(form = ~ tod | block/treatment),   
-  #weights = varIdent(form = ~ 1 | tod),     
+  correlation = corAR1(form = ~ tod | block/treatment),   
+  # weights = varIdent(form = ~ 1 | tod),     
   data = data2nd
 ) 
 
+summary(VPDleaf_2nd_m3)
 anova(VPDleaf_2nd_m3)
 anova(VPDleaf_2nd_m2, VPDleaf_2nd_m3)
 
@@ -231,7 +236,7 @@ PhiPS2_2nd_m1 <- lme(
 )  
 
 summary(PhiPS2_2nd_m1)
-anova(PhiPS2_2nd_m1) # interaction is insignificant 
+anova(PhiPS2_2nd_m1) # interaction is n.s. 
 
 PhiPS2_2nd_m2 <- lme(
   PhiPS2 ~ treatment + tod,                     
@@ -242,19 +247,20 @@ PhiPS2_2nd_m2 <- lme(
 )  # Failed to converge
 
 PhiPS2_2nd_m3 <- lme(
-  PhiPS2 ~ treatment * tod,                     
+  PhiPS2 ~ treatment + tod,                     
   random = ~ 1 | block/treatment,           
  # correlation = corAR1(form = ~ tod | block/treatment),   
-  # weights = varIdent(form = ~ 1 | tod),     
+  weights = varIdent(form = ~ 1 | tod),     
   data = data2nd
 )  
 
 summary(PhiPS2_2nd_m3)
+anova(PhiPS2_2nd_m3)
 
 anova(PhiPS2_2nd_m1, PhiPS2_2nd_m3) 
-# PhiPS2_2nd_m1 which has a correlation structure is better
+# Go with the simpler model: PhiPS2_2nd_m3
 
-emmeans(PhiPS2_2nd_m1, pairwise~treatment)
+emmeans(PhiPS2_2nd_m3, pairwise~treatment)
 
 
 
