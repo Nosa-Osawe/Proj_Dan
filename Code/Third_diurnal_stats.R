@@ -1,3 +1,14 @@
+# Notes:
+
+# I made the model such that it takes the variiable_name+dirunal+m1...n
+# m1 is more complex than m2, and so on as so forth [m1>m2>m3>m4]
+# variable name take the top characters of the model name. e.g
+# Qin_3rd_m3 == qin variable, 3rd diurnal and third model (simpler than m1 and m2)
+# so on and so forth....
+
+
+
+
 library(tidyverse)
 library(emmeans)
 library(nlme)
